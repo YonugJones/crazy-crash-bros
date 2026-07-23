@@ -1,3 +1,4 @@
+-- self.data --
 return {
   name          = 'Link',
   width         = 42,
@@ -26,7 +27,7 @@ return {
       frameWidth  = 64,
       frameHeight = 52,
       totalFrames = 8,
-      interval    = 0.2,
+      interval    = 0.1,
       loop        = true
     }
   }
