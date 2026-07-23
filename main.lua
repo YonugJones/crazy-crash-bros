@@ -13,3 +13,7 @@ end
 function love.draw()
   link:draw()
 end
+
+function love.keypressed(key)
+  link:keypressed(key)
+end

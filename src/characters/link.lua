@@ -8,7 +8,7 @@ return {
   scaleX        = 2,
   scaleY        = 2,
   runSpeed      = 350,
-  sprintSpeed   = 650,
+  sprintSpeed   = 600,
   jumpForce     = -900,
   jumpCut       = 0.4,
   coyoteTime    = 0.1,
@@ -29,6 +29,15 @@ return {
       totalFrames = 8,
       interval    = 0.1,
       loop        = true
+    },
+    sprint = {
+      file         = 'sprites/link/sprint.png',
+      frameWidth   = 64,
+      frameHeight  = 64,
+      totalFrames  = 8,
+      sheetOffsetY = 12,
+      interval     = 0.09,
+      loop         = true
     }
   }
 }
