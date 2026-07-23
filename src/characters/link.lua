@@ -41,16 +41,16 @@ return {
     },
     jump = {
       file        = 'sprites/link/jump.png',
-      frameWidth  = 0,
-      frameHeight = 0,
+      frameWidth  = 64,
+      frameHeight = 64,
       totalFrames = 2,
       interval    = 0.04,
       loop        = true
     },
     fall = {
       file        = 'sprites/link/fall.png',
-      frameWidth  = 0,
-      frameHeight = 0,
+      frameWidth  = 64,
+      frameHeight = 64,
       totalFrames = 2,
       interval    = 0.04,
       loop        = true

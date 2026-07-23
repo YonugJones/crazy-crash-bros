@@ -13,14 +13,21 @@ function Player:new(x, y, characterData)
     characterData.height,
     characterData.anims
   )
-  self.state       = 'idle'
-  self.isLocked    = false
-  self.isSprinting = false
-  self.lastTapTime = { a = -math.huge, d = -math.huge }
-  self.lastTapKey  = nil
+  self.state           = 'idle'
+  self.isLocked        = false
+  self.isSprinting     = false
+  self.lastTapTime     = { a = -math.huge, d = -math.huge }
+  self.lastTapKey      = nil
+  self.coyoteTimer     = 0
+  self.jumpBufferTimer = 0
 end
 
 function Player:keypressed(key)
+  if key == 'space' then
+    self.jumpBufferTimer = self.data.jumpBuffer
+    self:jump()
+  end
+
   if key ~= 'a' and key ~= 'd' then return end
 
   local now     = love.timer.getTime()
@@ -32,6 +39,21 @@ function Player:keypressed(key)
   end
 
   self.lastTapTime[key] = now
+end
+
+function Player:keyreleased(key)
+  if key == 'space' and self.vy < 0 then
+    self.vy = self.vy * self.data.jumpCut
+  end
+end
+
+function Player:jump()
+  if self.coyoteTimer > 0 and not self.isLocked then
+    self.vy              = self.data.jumpForce
+    self.coyoteTimer     = 0
+    self.jumpBufferTimer = 0
+    self.isGrounded      = false
+  end
 end
 
 function Player:update(dt, stage)
@@ -62,12 +84,32 @@ function Player:update(dt, stage)
     end
   end
 
+  -- coyoteTimer countdown --
+  if self.isGrounded then
+    self.coyoteTimer = self.data.coyoteTime
+  else
+    self.coyoteTimer = self.coyoteTimer - dt
+  end
+
+  -- jumpBuffer countdown --
+  if self.isGrounded and self.jumpBufferTimer > 0 then
+    self:jump()
+    self.jumpBufferTimer = 0
+  end
+
+  -- physics + collision via entity --
   self:updatePhysics(dt, stage)
+
+  -- animation --
   self:updateAnimation(dt)
 
   -- state machine --
   if self.isLocked then
     -- do nothing --
+  elseif not self.isGrounded and self.vy < 0 then
+    self:setState('jump')
+  elseif not self.isGrounded and self.vy >= 0 then
+    self:setState('fall')
   elseif (movingLeft or movingRight) and self.isSprinting then
     self:setState('sprint')
   elseif (movingLeft or movingRight) and not self.isSprinting then

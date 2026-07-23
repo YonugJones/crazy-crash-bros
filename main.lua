@@ -12,6 +12,10 @@ function love.keypressed(key)
   link:keypressed(key)
 end
 
+function love.keyreleased(key)
+  link:keyreleased(key)
+end
+
 function love.update(dt)
   link:update(dt, stage)
 end
