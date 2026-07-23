@@ -92,6 +92,11 @@ function Player:update(dt, stage)
   end
 
   -- jumpBuffer countdown --
+  if self.jumpBufferTimer > 0 then
+    self.jumpBufferTimer = self.jumpBufferTimer - dt
+  end
+
+  -- auto jump for forgiving jump command --
   if self.isGrounded and self.jumpBufferTimer > 0 then
     self:jump()
     self.jumpBufferTimer = 0
