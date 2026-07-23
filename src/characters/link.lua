@@ -38,6 +38,22 @@ return {
       sheetOffsetY = 12,
       interval     = 0.09,
       loop         = true
-    }
+    },
+    jump = {
+      file        = 'sprites/link/jump.png',
+      frameWidth  = 0,
+      frameHeight = 0,
+      totalFrames = 2,
+      interval    = 0.04,
+      loop        = true
+    },
+    fall = {
+      file        = 'sprites/link/fall.png',
+      frameWidth  = 0,
+      frameHeight = 0,
+      totalFrames = 2,
+      interval    = 0.04,
+      loop        = true
+    },
   }
 }

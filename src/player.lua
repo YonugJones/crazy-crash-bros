@@ -34,9 +34,8 @@ function Player:keypressed(key)
   self.lastTapTime[key] = now
 end
 
-function Player:update(dt)
+function Player:update(dt, stage)
   local dir = self.isFacingRight and 1 or -1
-
   local movingLeft = love.keyboard.isDown('a')
   local movingRight = love.keyboard.isDown('d')
 
@@ -63,7 +62,7 @@ function Player:update(dt)
     end
   end
 
-  self:updatePhysics(dt)
+  self:updatePhysics(dt, stage)
   self:updateAnimation(dt)
 
   -- state machine --

@@ -1,11 +1,12 @@
 local Entity = Object:extend()
 
-local GRAVITY = 0 -- add gravity aftwer tile collision
+local GRAVITY = 1800 -- add gravity aftwer tile collision
 
 function Entity:new(x, y, width, height, anims)
   -- position --
   self.x             = x
   self.y             = y
+  self.prevY         = y
   self.width         = width
   self.height        = height
   self.isFacingRight = true
@@ -54,20 +55,19 @@ function Entity:setState(newState)
   self.frameInterval = nil
 end
 
-function Entity:updatePhysics(dt)
+function Entity:updatePhysics(dt, stage)
+  self.prevY      = self.y
   self.vy         = self.vy + GRAVITY * dt
   self.y          = self.y + self.vy * dt
   self.isGrounded = false
 
-  -- tile collision --
-  -- if world then
-  --   local tiles = world:getTiles()
-  --   for _, tile in ipairs(tiles) do
-  --     if self:detectCollision(tile) then
-  --       self:resolveCollision(tile)
-  --     end
-  --   end
-  -- end
+  if stage then
+    for _, p in ipairs(stage.platforms) do
+      if self:isOverlapping(p) then
+        self:resolveCollision(p)
+      end
+    end
+  end
 end
 
 function Entity:updateAnimation(dt)
@@ -104,13 +104,23 @@ function Entity:onAnimationEnd()
   -- let subclass handle this --
 end
 
--- function Entity:detectCollision()
+function Entity:isOverlapping(p)
+  return self.x < p.x + p.width
+      and self.x + self.width > p.x
+      and self.y < p.y + p.height
+      and self.y + self.height > p.y
+end
 
--- end
+function Entity:resolveCollision(p)
+  -- only resolve if falling and entity's feet are above platform's top
+  local wasAbove = self.prevY + self.height <= p.y
 
--- function Entity:resolveCollision()
-
--- end
+  if self.vy >= 0 and wasAbove then
+    self.y          = p.y - self.height
+    self.vy         = 0
+    self.isGrounded = true
+  end
+end
 
 function Entity:draw(spriteOffsetX, spriteOffsetY, scaleX, scaleY)
   local def = self.anims[self.state]
